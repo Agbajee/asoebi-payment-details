@@ -1,4 +1,7 @@
+import { useState } from 'react';
+
 export default function App() {
+  const [copied, setCopied] = useState(false);
   const details = [
     {
       label: 'Aso Ebi Colour',
@@ -31,6 +34,18 @@ export default function App() {
       ),
     },
   ];
+
+  const handleCopy = async () => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText('7038971582');
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 1800);
+      }
+    } catch (error) {
+      console.error('Failed to copy account number', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] text-[#2F1E17] selection:bg-[#D8B36A]/30">
@@ -204,11 +219,10 @@ export default function App() {
                         </p>
 
                         <p
-                          className={`font-display font-bold leading-none ${
-                            item.label === 'Price'
+                          className={`font-display font-bold leading-none ${item.label === 'Price'
                               ? 'text-[#C96A2B] text-4xl sm:text-5xl md:text-6xl'
                               : 'text-[#4A2E24] text-3xl sm:text-4xl md:text-5xl'
-                          }`}
+                            }`}
                         >
                           {item.value}
                         </p>
@@ -268,15 +282,18 @@ export default function App() {
 
                   <div>
                     <button
-                      onClick={() => navigator.clipboard?.writeText('7038971582')}
+                      onClick={handleCopy}
                       className="hero-shadow inline-flex items-center justify-center gap-3 rounded-full border border-[#D8B36A]/45 bg-[#4A2E24] px-8 py-4 text-sm font-semibold uppercase tracking-[0.04em] text-[#FAF7F2] transition duration-300 hover:-translate-y-0.5 hover:bg-[#5B372C] focus:outline-none focus:ring-2 focus:ring-[#D8B36A]/50"
                     >
                       <svg className="h-4.5 w-4.5 text-[#D8B36A]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" strokeWidth="1.7" />
                         <path d="M6 15H5C3.9 15 3 14.1 3 13V5C3 3.9 3.9 3 5 3H13C14.1 3 15 3.9 15 5V6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
                       </svg>
-                      Copy Account Number
+                      {copied ? 'Copied!' : 'Copy Account Number'}
                     </button>
+                    <p className={`mt-3 text-sm ${copied ? 'text-[#2F7A4B]' : 'text-[#4A2E24]/60'}`} aria-live="polite">
+                      {copied ? 'Account number copied to clipboard.' : 'Tap to copy the account number.'}
+                    </p>
                   </div>
                 </div>
               </div>
